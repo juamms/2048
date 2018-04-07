@@ -16,6 +16,14 @@ Most of the original gameplay rules for this fork have been kept. However, some 
 * If all previous goals are equal, then the player with the __greatest overall score__ for all winning games wins.
 * Implementing algorithms that were previously implemented or discovered elsewhere is __strictly forbidden__, as this challenge's main attraction is to come up with an algorithm of your own.
 
+## Requirements
+This project was developed and tested on with node version `8.11.1` and npm version `5.8.0`. Newer and older versions may work but they haven't been tested.
+
+To run this project:
+1) Clone this project and cd into the folder.
+2) Run `npm install`.
+3) After installing all dependencies, run `node app.js` to start the server.
+
 ## API
 __NOTE__: All client-server communication is done through `WebSocket`s.  
 

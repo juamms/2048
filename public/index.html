@@ -6,43 +6,7 @@
     <title>2048 Challenge - Active Participants</title>
 
     <body>
-        <h1>Hiya!</h1>
-        <input type="text" name="player" id="player">
-        <button onclick="openWebSocket()">Open</button>
-        <button onclick="ws.close()">Close</button>
-        <p id="log"></p>
+
     </body>
-
-    <script>
-        var ws;
-
-        function log(text) {
-            let logArea = document.getElementById('log')
-
-            logArea.innerHTML += text + '<br>'
-        }
-
-        function openWebSocket() {
-            let playerID = document.getElementById('player').value
-            let connectionString = 'ws://localhost:8080/?player=' + playerID
-
-            log('connecting with ' + connectionString)
-            ws = new WebSocket(connectionString)
-
-            ws.onopen = () => {
-                log('connected')
-            }
-
-            ws.onmessage = (msg) => {
-                let text = msg.data
-
-                log('message received: ' + text)
-            }
-
-            ws.onclose = (err) => {
-                log('connection closed: ' + err.code + ' ' + err.reason)
-            }
-        }
-    </script>
 
 </html>

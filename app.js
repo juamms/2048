@@ -3,11 +3,16 @@ const http = require('http')
 const url = require('url')
 const WebSocket = require('ws')
 const app = express()
+const GameManager = require('./models/game_manager')
+const GameHelper = require('./models/game_helper')
 
 app.use(express.static('public'))
 
 const server = http.createServer(app)
 const wsServer = new WebSocket.Server({ server })
+
+var data = {}
+var archiveData = {}
 
 wsServer.on('connection', (ws, req) => {
     let player = url.parse(req.url, true).query.player
@@ -25,64 +30,45 @@ wsServer.on('connection', (ws, req) => {
 
     ws.send('Hello ' + player + '!')
 
+    data[player] = new GameManager()
+
+    ws.send(GameHelper.serializeGameData(data[player]))
+
     ws.on('message', (message) => {
-        console.log("Received message: %s", message)
+        console.log('Received message: %s', message)
+
+        if (GameHelper.isNewGameRequest(message)) {
+            console.log('Message is a new game request')
+            data[player].restart()
+        }
+
+        let gameMove = GameHelper.normalizeMove(message)
+
+        if (gameMove != null) {
+            console.log('Message is a move request')
+            data[player].move(gameMove)
+        }
+
+        if (data[player].isGameTerminated()) {
+            console.log('Game is over!')
+            consoler.log(GameHelper.serializeGameData(data[player]))
+
+            if (!archiveData[player]) {
+                archiveData[player] = []
+            }
+
+            archiveData[player].push(GameHelper.serializeGameData(data[player]))
+        }
+
+        ws.send(GameHelper.serializeGameData(data[player]))
     })
 
     ws.on('close', () => {
-        console.log('Closing player %s.', player)
+        console.log('Deleting data for player %s.', player)
+        delete data[player]
     })
 })
 
 server.listen(8080, () => {
     console.log('Listening on port %d', server.address().port)
 })
-
-
-// const GameManager = require('./models/game_manager')
-// var game = new GameManager();
-
-// const Directions = {
-//   up: 3,
-//   right: 2,
-//   down: 1,
-//   left: 0
-// }
-
-// var board = game.serialize().grid.cells
-
-// //board = Array.prototype.concat(...board) FOR ONLY ONE ARRAY
-
-// var str = ""
-
-// board.forEach(row => {
-//   str += row.map(cell => cell == null ? 0 : cell.value) + "\n"
-// });
-
-// console.log(str)
-
-// game.move(0)
-
-
-
-// /**
-//  * 
-//  * Given the different presentation of this fork,
-//  * these are the new moves:
-//  * 
-//  * 0 - LEFT
-//  * 1 - DOWN
-//  * 2 - RIGHT
-//  * 3 - UP
-//  */
-
-// board = game.serialize().grid.cells
-// str = ""
-
-// board.forEach(row => {
-//   str += row.map(cell => cell == null ? 0 : cell.value) + "\n"
-// });
-
-// console.log(str)
-// console.log(game.serialize().over)
-// console.log(game.serialize().won)

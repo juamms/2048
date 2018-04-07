@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>2048 Server Test</title>
+
+    <body>
+        <h1>Hiya!</h1>
+        <input type="text" name="player" id="player">
+        <button onclick="openWebSocket()">Open</button>
+        <button onclick="ws.close()">Close</button>
+        <br>
+        <input type="text" name="message" id="message">
+        <button onclick="sendMessage()">Send</button>
+        <p id="board"></p>
+        <br>
+        <p id="log"></p>
+    </body>
+
+    <script>
+        var ws;
+
+        function sendMessage() {
+            if (ws) {
+                let message = document.getElementById('message').value
+                log('sending mesage: ' + message)
+                ws.send(message)
+            }
+        }
+
+        function log(text) {
+            let logArea = document.getElementById('log')
+
+            logArea.innerHTML = text + '<br>' + logArea.innerHTML
+        }
+
+        function printBoard(text) {
+            let data = text.split(',')
+            let str = ''
+
+            for (var i = 0; i < data.length; i++) {
+                str += data[i] + ' '
+
+                if (i % 4 == 3) {
+                    str += '<br>'
+                }
+            }
+
+            document.getElementById('board').innerHTML = str
+        }
+
+        function openWebSocket() {
+            let playerID = document.getElementById('player').value
+            let connectionString = 'ws://localhost:8080/?player=' + playerID
+
+            log('connecting with ' + connectionString)
+            ws = new WebSocket(connectionString)
+
+            ws.onopen = () => {
+                log('connected')
+            }
+
+            ws.onmessage = (msg) => {
+                let text = msg.data
+
+                log('message received: ' + text)
+
+                if (text.indexOf('|') > -1) {
+                    printBoard(text.split('|')[3])
+                }
+            }
+
+            ws.onclose = (err) => {
+                log('connection closed: ' + err.code + ' ' + err.reason)
+            }
+        }
+    </script>
+
+</html>

@@ -1,0 +1,22 @@
+{
+  "name": "2048-server",
+  "version": "1.0.0",
+  "description": "A simple game server for 2048.",
+  "main": "application.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/juamms/2048-server.git"
+  },
+  "author": "Joao Silva",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/juamms/2048-server/issues"
+  },
+  "homepage": "https://github.com/juamms/2048-server#readme",
+  "dependencies": {
+    "ws": "^5.1.1"
+  }
+}

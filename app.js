@@ -39,6 +39,9 @@ wsServer.on('connection', (ws, req) => {
 
         if (GameHelper.isNewGameRequest(message)) {
             console.log('Message is a new game request')
+
+            // TODO: If there was a previous game, add it to the archived games
+
             data[player].restart()
         }
 

@@ -22,6 +22,7 @@ GameManager.prototype.isGameTerminated = function () {
 GameManager.prototype.setup = function () {
     this.grid = new Grid(this.size);
     this.score = 0;
+    this.moves = 0;
     this.over = false;
     this.won = false;
 
@@ -51,6 +52,7 @@ GameManager.prototype.serialize = function () {
     return {
         grid: this.grid.serialize(),
         score: this.score,
+        moves: this.moves,
         over: this.over,
         won: this.won
     };
@@ -125,6 +127,8 @@ GameManager.prototype.move = function (direction) {
             }
         });
     });
+
+    this.moves += 1;
 
     if (moved) {
         this.addRandomTile();

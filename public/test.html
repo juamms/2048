@@ -52,7 +52,7 @@
 
         function openWebSocket() {
             let playerID = document.getElementById('player').value
-            let connectionString = 'ws://localhost:8080/?player=' + playerID
+            let connectionString = 'ws://localhost:8080?player=' + playerID
 
             log('connecting with ' + connectionString)
             ws = new WebSocket(connectionString)
@@ -67,7 +67,7 @@
                 log('message received: ' + text)
 
                 if (text.indexOf('|') > -1) {
-                    printBoard(text.split('|')[3])
+                    printBoard(text.split('|')[4])
                 }
             }
 

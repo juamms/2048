@@ -2,7 +2,7 @@
   "name": "2048-server",
   "version": "1.0.0",
   "description": "A simple game server for 2048.",
-  "main": "application.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/juamms/2048-server#readme",
   "dependencies": {
+    "express": "^4.16.3",
     "ws": "^5.1.1"
   }
 }

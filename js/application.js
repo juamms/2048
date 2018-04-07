@@ -1,3 +1,5 @@
+var GameManager = require('./game_manager')
+
 var game = new GameManager();
 
 const Directions = {

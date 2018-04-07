@@ -1,4 +1,6 @@
-function Grid(size, previousState) {
+var Tile = require('./tile')
+
+var Grid = function (size, previousState) {
   this.size = size;
   this.cells = previousState ? this.fromState(previousState) : this.empty();
 }
@@ -96,7 +98,7 @@ Grid.prototype.removeTile = function (tile) {
 
 Grid.prototype.withinBounds = function (position) {
   return position.x >= 0 && position.x < this.size &&
-         position.y >= 0 && position.y < this.size;
+    position.y >= 0 && position.y < this.size;
 };
 
 Grid.prototype.serialize = function () {
@@ -115,3 +117,5 @@ Grid.prototype.serialize = function () {
     cells: cellState
   };
 };
+
+module.exports = Grid

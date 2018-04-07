@@ -1,4 +1,7 @@
-function GameManager() {
+var Grid = require('./grid')
+var Tile = require('./tile')
+
+var GameManager = function () {
   this.size = 4; // Size of the grid
   this.startTiles = 2;
 
@@ -212,3 +215,5 @@ GameManager.prototype.tileMatchesAvailable = function () {
 GameManager.prototype.positionsEqual = function (first, second) {
   return first.x === second.x && first.y === second.y;
 };
+
+module.exports = GameManager

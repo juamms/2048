@@ -1,10 +1,10 @@
-function Tile(position, value) {
-  this.x                = position.x;
-  this.y                = position.y;
-  this.value            = value || 2;
+var Tile = function (position, value) {
+  this.x = position.x;
+  this.y = position.y;
+  this.value = value || 2;
 
   this.previousPosition = null;
-  this.mergedFrom       = null; // Tracks tiles that merged together
+  this.mergedFrom = null; // Tracks tiles that merged together
 }
 
 Tile.prototype.savePosition = function () {
@@ -25,3 +25,5 @@ Tile.prototype.serialize = function () {
     value: this.value
   };
 };
+
+module.exports = Tile

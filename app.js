@@ -54,7 +54,7 @@ wsServer.on('connection', (ws, req) => {
 
         if (data[player].isGameTerminated()) {
             console.log('Game is over!')
-            consoler.log(GameHelper.serializeGameData(data[player]))
+            console.log(GameHelper.serializeGameData(data[player]))
 
             if (!archiveData[player]) {
                 archiveData[player] = []

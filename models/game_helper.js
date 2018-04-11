@@ -7,6 +7,8 @@ function serializeGameData(game) {
         grid += (cell == null ? 0 : cell.value) + ','
     });
 
+    grid = grid.substring(0, grid.length - 1)
+
     return '' + data.score + '|' + data.moves + '|' + data.over + '|' + data.won + '|' + grid
 }
 

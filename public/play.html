@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>2048 Server Test</title>
+    <style>
+        #logDiv {
+            height: 250px;
+            overflow-y: scroll;
+        }
+
+        #log {
+            display: block;
+            font-family: monospace;
+            white-space: pre;
+            margin: 1em 0;
+        }
+
+        /*Cell Styling*/
+
+        .tile {
+            border-radius: 3px;
+            text-align: center;
+            font-weight: bold;
+            z-index: 10;
+            font-size: 55px;
+            width: 100px;
+            height: 100px;
+        }
+
+        .tile.tile-2 {
+            background: #eee4da;
+        }
+
+        .tile.tile-4 {
+            background: #ede0c8;
+        }
+
+        .tile.tile-8 {
+            color: #f9f6f2;
+            background: #f2b179;
+        }
+
+        .tile.tile-16 {
+            color: #f9f6f2;
+            background: #f59563;
+        }
+
+        .tile.tile-32 {
+            color: #f9f6f2;
+            background: #f67c5f;
+        }
+
+        .tile.tile-64 {
+            color: #f9f6f2;
+            background: #f65e3b;
+        }
+
+        .tile.tile-128 {
+            color: #f9f6f2;
+            background: #edcf72;
+            font-size: 45px;
+        }
+
+        .tile.tile-256 {
+            color: #f9f6f2;
+            background: #edcc61;
+            font-size: 45px;
+        }
+
+        .tile.tile-512 {
+            color: #f9f6f2;
+            background: #edc850;
+            font-size: 45px;
+        }
+
+        .tile.tile-1024 {
+            color: #f9f6f2;
+            background: #edc53f;
+            font-size: 35px;
+        }
+
+        .tile.tile-2048 {
+            color: #f9f6f2;
+            background: #edc22e;
+            font-size: 35px;
+        }
+    </style>
+
+</head>
+
+<body>
+    <h1>Hiya!</h1>
+    <input type="text" name="player" id="player" value="Annyeong">
+    <button onclick="openWebSocket()">Open</button>
+    <button onclick="ws.close()">Close</button>
+    <br>
+    <button onclick="sendMessage('+')">Reset Game</button>
+    <p id="results"></p>
+
+    <table id="board"></table>
+    <br>
+    <div id="logDiv">
+        <p id="log"></p>
+    </div>
+</body>
+
+<script>
+    var ws;
+    var keycodes = {
+        37: '<',
+        38: '^',
+        39: '>',
+        40: 'v'
+
+    }
+    function keyDownTextField(e) {
+        var keyCode = e.keyCode;
+        var value = keycodes[keyCode];
+        if (value !== undefined) {
+            sendMessage(keycodes[keyCode]);
+            e.preventDefault();
+        }
+    }
+
+    function sendMessage(message) {
+        if (ws) {
+            log('sending mesage: ' + message)
+            ws.send(message)
+        }
+    }
+
+    function log(text) {
+        let logArea = document.getElementById('log')
+
+        logArea.innerHTML = text + '<br>' + logArea.innerHTML
+    }
+
+    function printBoard(text) {
+        let data = text.split(',')
+        let table = document.getElementById('board')
+        let tr;
+        table.innerHTML = "";
+
+        for (var i = 0; i < data.length; i++) {
+            if (i % 4 == 0) {
+                tr = document.createElement("tr");
+            }
+
+            let td = document.createElement("td");
+            td.className = "tile tile-" + data[i] + "";
+            td.innerHTML = data[i] + "";
+            tr.appendChild(td);
+            if (i % 4 == 3) {
+                table.appendChild(tr);
+            }
+        }
+
+    }
+    var msgContentHeaders = ["Score", "Moves", "Game over", "Game won"];
+    function updateResults(msg) {
+        let content = msg.split('|');
+        let str = "";
+        for (var i = 0; i < msgContentHeaders.length; i++) {
+            if (content[i]) {
+                str = str + msgContentHeaders[i] + ": " + content[i] + "<br>";
+            }
+        }
+        document.getElementById('results').innerHTML = str;
+    }
+
+    function openWebSocket() {
+        let playerID = document.getElementById('player').value
+        let connectionString = 'ws://localhost:8080?player=' + playerID
+
+        log('connecting with ' + connectionString)
+        ws = new WebSocket(connectionString)
+
+        ws.onopen = () => {
+            log('connected')
+
+            document.addEventListener("keydown", keyDownTextField, false);
+        }
+
+        ws.onmessage = (msg) => {
+            let text = msg.data
+
+            log('message received: ' + text)
+
+            if (text.indexOf('|') > -1) {
+                printBoard(text.split('|')[4])
+                updateResults(text);
+            }
+        }
+
+        ws.onclose = (err) => {
+            log('connection closed: ' + err.code + ' ' + err.reason)
+        }
+
+    }
+
+
+</script>
+
+</html>
